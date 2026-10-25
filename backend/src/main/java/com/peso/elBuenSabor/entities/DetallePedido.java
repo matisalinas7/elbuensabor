@@ -1,5 +1,6 @@
 package com.peso.elBuenSabor.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 
@@ -34,6 +35,7 @@ public class DetallePedido extends Base{
 
     @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "pedido_id")
+    @JsonIgnore // Pedido ya lista sus detalles: serializarlo de vuelta genera recursión infinita
     private Pedido pedido;
 
     @Transient

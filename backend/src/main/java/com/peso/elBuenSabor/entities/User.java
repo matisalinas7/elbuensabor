@@ -4,6 +4,8 @@ package com.peso.elBuenSabor.entities;
 import java.util.Collection;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.peso.elBuenSabor.enums.Role;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
@@ -28,6 +30,7 @@ import jakarta.persistence.UniqueConstraint;
 @Table(name="user", uniqueConstraints = {@UniqueConstraint(columnNames = {"username"})})
 @Getter
 @Setter
+@JsonIgnoreProperties({"authorities", "accountNonExpired", "accountNonLocked", "credentialsNonExpired", "enabled"})
 public class User extends Base implements UserDetails{
 
     @Basic
@@ -37,6 +40,8 @@ public class User extends Base implements UserDetails{
     String lastname;
     String firstname;
     String country;
+    // Se recibe al crear/editar, pero nunca se devuelve el hash
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     String password;
     @Enumerated(EnumType.STRING)
     Role role;
