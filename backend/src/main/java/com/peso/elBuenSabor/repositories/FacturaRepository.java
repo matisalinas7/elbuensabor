@@ -12,6 +12,8 @@ import java.util.List;
 @Repository
 public interface FacturaRepository extends BaseRepository<Factura, Long> {
 
+    boolean existsByPedidoId(Long pedidoId);
+
     @Query("SELECT f FROM Factura f WHERE f.fechaFacturacion BETWEEN :fechaInicio AND :fechaFin")
     List<Factura> findFacturasByFechaBetween(@Param("fechaInicio") Date fechaInicio, @Param("fechaFin") Date fechaFin);
 

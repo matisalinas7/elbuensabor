@@ -14,6 +14,8 @@ import java.util.Optional;
 @Repository
 public interface ClienteRepository extends BaseRepository<Cliente, Long> {
 
+    Optional<Cliente> findByUserId(Long userId);
+
     List<Cliente> findByNombreContainingOrApellidoContaining(String nombre, String apellido);
     Page<Cliente> findByNombreContainingOrApellidoContaining(String nombre, String apellido , Pageable pageable);
 
