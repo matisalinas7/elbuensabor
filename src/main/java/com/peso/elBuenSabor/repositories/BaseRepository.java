@@ -8,6 +8,6 @@ import org.springframework.stereotype.Repository;
 import java.io.Serializable;
 import java.util.List;
 
-@Repository
+@NoRepositoryBean
 public interface BaseRepository <E extends Base, ID extends Serializable> extends JpaRepository<E,ID> {
 }

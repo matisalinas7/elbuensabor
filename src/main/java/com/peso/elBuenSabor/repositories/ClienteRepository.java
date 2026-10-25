@@ -24,12 +24,13 @@ public interface ClienteRepository extends BaseRepository<Cliente, Long> {
     @Query(value = "SELECT p FROM Cliente p WHERE p.nombre LIKE %:filtro% OR p.apellido LIKE %:filtro%")
     Page<Cliente> search(@Param("filtro") String filtro , Pageable pageable);
 
-    @Query(value = "SELECT * FROM Cliente WHERE Cliente.nombre LIKE %:filtro% OR Cliente.apellido LIKE %:filtro%",
+    // Las queries nativas no aplican el @Where de Cliente: hay que excluir los eliminados a mano
+    @Query(value = "SELECT * FROM Cliente WHERE (Cliente.nombre LIKE %:filtro% OR Cliente.apellido LIKE %:filtro%) AND Cliente.fecha_baja IS NULL",
             nativeQuery = true)
     List<Cliente> searchNativo(@Param("filtro") String filtro);
 
-    @Query(value = "SELECT * FROM Cliente WHERE Cliente.nombre LIKE %:filtro% OR Cliente.apellido LIKE %:filtro%",
-            countQuery = "SELECT count(*) FROM Cliente",
+    @Query(value = "SELECT * FROM Cliente WHERE (Cliente.nombre LIKE %:filtro% OR Cliente.apellido LIKE %:filtro%) AND Cliente.fecha_baja IS NULL",
+            countQuery = "SELECT count(*) FROM Cliente WHERE (Cliente.nombre LIKE %:filtro% OR Cliente.apellido LIKE %:filtro%) AND Cliente.fecha_baja IS NULL",
             nativeQuery = true)
     Page<Cliente> searchNativo(@Param("filtro") String filtro, Pageable pageable);
 

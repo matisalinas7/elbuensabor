@@ -21,6 +21,6 @@ public class UserServiceImpl extends BaseServiceImpl<User, Long> implements User
 
     @Override
     public Optional<User> findByUsername(String username) {
-        return Optional.empty();
+        return userRepository.findByUsername(username);
     }
 }

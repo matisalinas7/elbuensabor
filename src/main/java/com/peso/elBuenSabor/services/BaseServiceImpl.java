@@ -70,14 +70,17 @@ public abstract class BaseServiceImpl<E extends Base, ID extends Serializable> i
     @Override
     @Transactional
     public E update(ID id, E entity) throws Exception {
-        try{
-            Optional<E> entityOptional = baseRepository.findById(id);
-            E entityUpdate = entityOptional.get();
-            entityUpdate = baseRepository.save(entity);
-            return entityUpdate;
-        } catch (Exception e){
-            throw new Exception(e.getMessage());
-        }
+        E entityActual = baseRepository.findById(id)
+                .orElseThrow(() ->
+                        new EntityNotFoundException("No se encontró la entidad con id " + id)
+                );
+
+        // El id sale de la URL y los datos de auditoría de la base, no del body
+        entity.setId(entityActual.getId());
+        entity.setFechaAlta(entityActual.getFechaAlta());
+        entity.setFechaBaja(entityActual.getFechaBaja());
+
+        return baseRepository.save(entity);
     }
 
 //    @Override
