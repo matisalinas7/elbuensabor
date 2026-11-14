@@ -13,5 +13,6 @@ import java.util.List;
 
 @Repository
 public interface DomicilioRepository extends BaseRepository<Domicilio, Long> {
+    List<Domicilio> findByClienteId(Long clienteId);
 
 }

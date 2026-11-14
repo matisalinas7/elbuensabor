@@ -11,4 +11,5 @@ import java.util.List;
 @Repository
 public interface PedidoRepository extends BaseRepository<Pedido, Long> {
     List<Pedido> findByClienteId(@Param("clienteId") Long clienteId);
+    List<Pedido> findByClienteIdOrderByFechaPedidoDesc(Long clienteId);
 }

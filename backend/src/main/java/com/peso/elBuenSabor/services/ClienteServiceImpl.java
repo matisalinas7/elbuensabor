@@ -1,6 +1,7 @@
 package com.peso.elBuenSabor.services;
 
 import com.peso.elBuenSabor.entities.Cliente;
+import com.peso.elBuenSabor.entities.User;
 import com.peso.elBuenSabor.repositories.BaseRepository;
 import com.peso.elBuenSabor.repositories.ClienteRepository;
 import jakarta.transaction.Transactional;
@@ -63,6 +64,23 @@ public class ClienteServiceImpl extends BaseServiceImpl<Cliente, Long> implement
 
         return clienteRepository.findById(id)
                 .orElseThrow(() -> new Exception("Error al restaurar el cliente"));
+    }
+
+    @Override
+    public Optional<Cliente> findByUser(User user) {
+        return clienteRepository.findByUserId(user.getId());
+    }
+
+    @Transactional
+    @Override
+    public Cliente findOrCreateForUser(User user) {
+        return clienteRepository.findByUserId(user.getId()).orElseGet(() -> {
+            Cliente cliente = new Cliente();
+            cliente.setNombre(user.getFirstname() != null ? user.getFirstname() : user.getUsername());
+            cliente.setApellido(user.getLastname());
+            cliente.setUser(user);
+            return clienteRepository.save(cliente);
+        });
     }
 
 }

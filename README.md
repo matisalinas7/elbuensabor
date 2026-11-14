@@ -9,7 +9,7 @@ Sistema de gestión para un local de comida rápida con delivery: catálogo de p
 ```text
 elbuensabor/
 ├── backend/    # API REST: Java 17, Spring Boot 3, Spring Security + JWT, H2
-└── frontend/   # Nuevo frontend (en construcción)
+└── frontend/   # SPA: React 19, TypeScript, Vite, Tailwind
 ```
 
 ## 🚀 Cómo levantarlo
@@ -25,4 +25,10 @@ La API queda en `http://localhost:8080`. Más detalles en [backend/README.md](ba
 
 ### Frontend
 
-En construcción.
+```bash
+cd frontend
+npm install
+npm run dev
+```
+
+Queda en `http://localhost:5173`. Más detalles (proxy al backend y usuarios de prueba) en [frontend/README.md](frontend/README.md).

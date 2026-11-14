@@ -1,15 +1,13 @@
 package com.peso.elBuenSabor.controllers;
 
+import com.peso.elBuenSabor.DTOs.DTOcambiarestado;
 import com.peso.elBuenSabor.entities.Pedido;
 import com.peso.elBuenSabor.services.PedidoService;
-import com.peso.elBuenSabor.services.PedidoServiceImpl;
-import org.springframework.beans.factory.annotation.Autowired;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.yaml.snakeyaml.events.Event;
 
-import java.awt.print.Pageable;
 import java.util.List;
 
 @RestController
@@ -22,9 +20,17 @@ public class PedidoController extends BaseControllerImpl<Pedido, PedidoService> 
             return servicio.findPedidosByClienteId(clienteId);
         }
 
+    // Cambia solo el estado, sin tener que mandar el pedido completo por PUT
+    @PatchMapping("/{id}/estado")
+    public ResponseEntity<?> cambiarEstado(@PathVariable Long id, @RequestBody DTOcambiarestado body) {
+        if (body.getEstadoPedido() == null) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("{\"Error\":\"Falta el estado\"}");
+        }
+        try {
+            return ResponseEntity.ok(servicio.cambiarEstado(id, body.getEstadoPedido()));
+        } catch (EntityNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("{\"Error\":\"" + e.getMessage() + "\"}");
+        }
+    }
+
 }
-
-
-
-
-

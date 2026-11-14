@@ -26,7 +26,8 @@ public class FacturaController extends BaseControllerImpl<Factura, FacturaServic
     @GetMapping("/informe-movimientos-monetarios")
     public ResponseEntity<Map<String, Double>> obtenerInformeMovimientosMonetarios(@RequestParam String fechaInicio, @RequestParam String fechaFin) {
         Date fechaInicioDate = parsearFecha(fechaInicio);
-        Date fechaFinDate = parsearFecha(fechaFin);
+        // La fecha fin llega como 00:00: se extiende hasta el final de ese día para incluirlo
+        Date fechaFinDate = new Date(parsearFecha(fechaFin).getTime() + 24L * 60 * 60 * 1000 - 1);
 
         List<Factura> facturas = facturaService.findFacturasByFechaBetween(fechaInicioDate, fechaFinDate);
         Map<String, Double> informe = calcularInformeMonetario(facturas);
@@ -54,8 +55,10 @@ public class FacturaController extends BaseControllerImpl<Factura, FacturaServic
         double costos = 0.0;
 
         for (Factura factura : facturas) {
-            ingresos = factura.getTotalVenta(); // Suponiendo que el monto está en la factura
-            // Puedes agregar lógica adicional para calcular costos si es necesario
+            ingresos += factura.getTotalVenta();
+            if (factura.getPedido() != null && factura.getPedido().getTotalCosto() != null) {
+                costos += factura.getPedido().getTotalCosto().doubleValue();
+            }
         }
 
         double ganancias = ingresos - costos;
